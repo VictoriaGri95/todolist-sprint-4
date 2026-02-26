@@ -17,7 +17,10 @@ export const AppHttpRequests = () => {
       setTodolists(todolists)
       todolists.forEach((todolist) => {
         tasksApi.getTasks(todolist.id).then((res) => {
-          setTasks((prevTasksState) => ({ ...prevTasksState, [todolist.id]: res.data.items }))
+          setTasks((prevTasksState) => ({
+            ...prevTasksState,
+            [todolist.id]: res.data.items,
+          }))
         })
       })
     })
@@ -41,7 +44,16 @@ export const AppHttpRequests = () => {
 
   const changeTodolistTitle = (id: string, title: string) => {
     todolistsApi.changeTodolistTitle({ id, title }).then(() => {
-      setTodolists(todolists.map((todolist) => (todolist.id === id ? { ...todolist, title } : todolist)))
+      setTodolists(
+        todolists.map((todolist) =>
+          todolist.id === id
+            ? {
+                ...todolist,
+                title,
+              }
+            : todolist,
+        ),
+      )
     })
   }
 
@@ -54,7 +66,10 @@ export const AppHttpRequests = () => {
 
   const deleteTask = (todolistId: string, taskId: string) => {
     tasksApi.deleteTask({ todolistId, taskId }).then(() => {
-      setTasks({ ...tasks, [todolistId]: tasks[todolistId].filter((task) => task.id !== taskId) })
+      setTasks({
+        ...tasks,
+        [todolistId]: tasks[todolistId].filter((task) => task.id !== taskId),
+      })
     })
   }
 
@@ -71,7 +86,10 @@ export const AppHttpRequests = () => {
     }
 
     tasksApi.updateTask({ todolistId, taskId: task.id, model }).then(() => {
-      setTasks({ ...tasks, [todolistId]: tasks[todolistId].map((t) => (t.id === task.id ? { ...t, ...model } : t)) })
+      setTasks({
+        ...tasks,
+        [todolistId]: tasks[todolistId].map((t) => (t.id === task.id ? { ...t, ...model } : t)),
+      })
     })
   }
 
@@ -88,7 +106,10 @@ export const AppHttpRequests = () => {
     }
 
     tasksApi.updateTask({ todolistId, taskId: task.id, model }).then(() => {
-      setTasks({ ...tasks, [todolistId]: tasks[todolistId].map((t) => (t.id === task.id ? { ...t, ...model } : t)) })
+      setTasks({
+        ...tasks,
+        [todolistId]: tasks[todolistId].map((t) => (t.id === task.id ? { ...t, ...model } : t)),
+      })
     })
   }
 

@@ -8,11 +8,19 @@ export const tasksApi = {
   },
   createTask(payload: { todolistId: string; title: string }) {
     const { todolistId, title } = payload
-    return instance.post<BaseResponse<{ item: DomainTask }>>(`/todo-lists/${todolistId}/tasks`, { title })
+    return instance.post<
+      BaseResponse<{
+        item: DomainTask
+      }>
+    >(`/todo-lists/${todolistId}/tasks`, { title })
   },
   updateTask(payload: { todolistId: string; taskId: string; model: UpdateTaskModel }) {
     const { todolistId, taskId, model } = payload
-    return instance.put<BaseResponse<{ item: DomainTask }>>(`/todo-lists/${todolistId}/tasks/${taskId}`, model)
+    return instance.put<
+      BaseResponse<{
+        item: DomainTask
+      }>
+    >(`/todo-lists/${todolistId}/tasks/${taskId}`, model)
   },
   deleteTask(payload: { todolistId: string; taskId: string }) {
     const { todolistId, taskId } = payload

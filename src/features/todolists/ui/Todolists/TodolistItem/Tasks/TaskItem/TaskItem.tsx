@@ -5,7 +5,7 @@ import {
   changeTaskTitleAC,
   deleteTaskAC,
   type Task,
-} from "@/features/todolists/model/tasks-reducer"
+} from "@/features/todolists/model/tasks-slice.ts"
 import DeleteIcon from "@mui/icons-material/Delete"
 import Checkbox from "@mui/material/Checkbox"
 import IconButton from "@mui/material/IconButton"
@@ -27,7 +27,13 @@ export const TaskItem = ({ task, todolistId }: Props) => {
 
   const changeTaskStatus = (e: ChangeEvent<HTMLInputElement>) => {
     const newStatusValue = e.currentTarget.checked
-    dispatch(changeTaskStatusAC({ todolistId, taskId: task.id, isDone: newStatusValue }))
+    dispatch(
+      changeTaskStatusAC({
+        todolistId,
+        taskId: task.id,
+        isDone: newStatusValue,
+      }),
+    )
   }
 
   const changeTaskTitle = (title: string) => {
