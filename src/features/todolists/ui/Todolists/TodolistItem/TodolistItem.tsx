@@ -15,7 +15,7 @@ export const TodolistItem = ({ todolist }: Props) => {
   const dispatch = useAppDispatch()
 
   const createTask = (title: string) => {
-    dispatch(createTaskAC({ todolistId: todolist.id, title }))
+    dispatch(createTaskAC( todolist.id, title ))
   }
 
   return (

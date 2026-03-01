@@ -1,5 +1,8 @@
 import { createSlice, nanoid } from "@reduxjs/toolkit"
-import { createTodolistAC, deleteTodolistAC } from "./todolists-slice.ts"
+import {
+  createTodolistTC,
+  deleteTodolistTC
+} from "./todolists-slice.ts"
 
 export const tasksSlice = createSlice({
   name: "tasks",
@@ -35,7 +38,15 @@ export const tasksSlice = createSlice({
       },
       (state, action) => {
         const { todolistId, task } = action.payload
-        state[todolistId].unshift(task)
+        if (state[todolistId]) {
+          state[todolistId].unshift(task)
+        } else {
+          // Если массив не существует (тудулист еще создается),
+          // создаем новый массив с этой задачей
+          state[todolistId] = [task]
+          // Или можно просто проигнорировать создание задачи:
+          // console.warn(`Тудулист ${todolistId} еще не инициализирован`)
+        }
       },
     ),
 
@@ -64,11 +75,12 @@ export const tasksSlice = createSlice({
 
   extraReducers: (builder) => {
     builder
-      .addCase(createTodolistAC, (state, action) => {
-        state[action.payload.id] = []
+      .addCase(createTodolistTC.fulfilled, (state, action) => {
+        state[action.payload.item.id] = []
       })
 
-      .addCase(deleteTodolistAC, (state, action) => {
+      .addCase(deleteTodolistTC.fulfilled, (state, action) => {
+
         delete state[action.payload.id]
       })
   },
