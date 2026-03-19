@@ -12,6 +12,4 @@ export const handleCatchError = (error: unknown, dispatch: Dispatch) => {
     dispatch(setAppErrorAC({ error: "Something went wrong" }))
   }
   dispatch(setAppStatusAC({ status: "failed" }))
-  // dispatch(setAppStatusAC({ status: "failed" }))
-  // dispatch(setAppErrorAC({ error: error.response?.data?.message || error.message }))
 }
