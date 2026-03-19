@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router"
 import { Main } from "@/app/Main.tsx"
-import { Login } from "@/features/auth/Login/Login.tsx"
+import { Login } from "@/features/auth/ui/Login/Login.tsx"
 import { PageNotFound } from "@/common/components"
 
 export const Path = {

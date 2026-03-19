@@ -6,6 +6,7 @@ import { setAppStatusAC } from "@/app/app-slice.ts"
 import { ResultCode } from "@/common/enums"
 import { handleCatchError } from "@/common/utilits/handleCatchError.ts"
 import { handleStatusCodeError } from "@/common/utilits/handleStatusCodeError.ts"
+import { domainTaskSchema } from "@/features/todolists/model/schemas/schemasForTasks.ts"
 
 export const tasksSlice = createAppSlice({
   name: "tasks",
@@ -28,6 +29,9 @@ export const tasksSlice = createAppSlice({
         try {
           dispatch(setAppStatusAC({ status: "loading" }))
           const res = await tasksApi.getTasks(todolistId)
+
+          domainTaskSchema.array().parse(res.data.items)
+
           dispatch(setAppStatusAC({ status: "succeeded" }))
           return { todolistId, tasks: res.data.items }
         } catch (error) {
@@ -50,6 +54,8 @@ export const tasksSlice = createAppSlice({
           const res = await tasksApi.createTask(args)
 
           if (res.data.resultCode === ResultCode.Success) {
+            domainTaskSchema.parse(res.data.data.item)
+
             dispatch(setAppStatusAC({ status: "succeeded" }))
             return { task: res.data.data.item }
           } else {
@@ -111,6 +117,9 @@ export const tasksSlice = createAppSlice({
             startDate: task.startDate,
             deadline: task.deadline,
           }
+
+          domainTaskSchema.parse(model)
+
           dispatch(setAppStatusAC({ status: "loading" }))
           const res = await tasksApi.updateTask({
             todolistId: task.todoListId,
@@ -118,6 +127,8 @@ export const tasksSlice = createAppSlice({
             model,
           })
           if (res.data.resultCode === ResultCode.Success) {
+            domainTaskSchema.parse(res.data.data.item)
+
             dispatch(setAppStatusAC({ status: "succeeded" }))
             return { task: res.data.data.item }
           } else {

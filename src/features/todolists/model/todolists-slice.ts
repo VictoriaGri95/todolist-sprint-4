@@ -6,6 +6,7 @@ import { RequestStatus } from "@/common/types"
 import { ResultCode } from "@/common/enums"
 import { handleCatchError } from "@/common/utilits/handleCatchError.ts"
 import { handleStatusCodeError } from "@/common/utilits/handleStatusCodeError.ts"
+import { todolistSchema } from "@/features/todolists/model/schemas/schemasForTodolists.ts"
 
 export const todolistsSlice = createAppSlice({
   name: "todolists",
@@ -40,6 +41,9 @@ export const todolistsSlice = createAppSlice({
         try {
           dispatch(setAppStatusAC({ status: "loading" }))
           const res = await todolistsApi.getTodolists()
+
+          todolistSchema.array().parse(res.data)
+
           dispatch(setAppStatusAC({ status: "succeeded" }))
           return { todolists: res.data }
         } catch (error) {
@@ -64,6 +68,8 @@ export const todolistsSlice = createAppSlice({
           dispatch(setAppStatusAC({ status: "loading" }))
           const res = await todolistsApi.createTodolist(title)
           if (res.data.resultCode === ResultCode.Success) {
+            todolistSchema.parse(res.data.data.item)
+
             dispatch(setAppStatusAC({ status: "succeeded" }))
             return { todolist: res.data.data.item }
           } else {
@@ -188,13 +194,3 @@ export type DomainTodolist = Todolist & {
 }
 
 export type FilterValues = "all" | "active" | "completed"
-
-
-//export const _fetchTodolistsTC = createAsyncThunk(`${todolistsSlice.name}/fetchTodolistsTC`, async (_, thunkAPI) => {
-//   try {
-//     const res = await todolistsApi.getTodolists()
-//     return { todolists: res.data }
-//   } catch (error) {
-//     return thunkAPI.rejectWithValue(null)
-//   }
-// })

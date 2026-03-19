@@ -1,4 +1,4 @@
-import { selectThemeMode } from "@/app/app-slice"
+import { selectThemeMode } from "@/app/app-slice.ts"
 import { useAppSelector } from "@/common/hooks"
 import { getTheme } from "@/common/theme"
 import Button from "@mui/material/Button"
@@ -10,13 +10,14 @@ import FormLabel from "@mui/material/FormLabel"
 import Grid from "@mui/material/Grid2"
 import TextField from "@mui/material/TextField"
 import { Controller, useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { LoginInputs, loginSchema } from "@/features/auth/model/schemas"
 
 export const Login = () => {
   const themeMode = useAppSelector(selectThemeMode)
   const theme = getTheme(themeMode)
 
   const {
-    register,
     handleSubmit,
     reset,
     control,
@@ -27,13 +28,8 @@ export const Login = () => {
       password: "",
       rememberMe: false,
     },
+    resolver: zodResolver(loginSchema),
   })
-
-  type LoginInputs = {
-    email: string
-    password: string
-    rememberMe: boolean
-  }
 
   const onSubmit = (data: LoginInputs) => {
     console.log(data)
@@ -65,30 +61,41 @@ export const Login = () => {
         </FormLabel>
         <form onSubmit={handleSubmit(onSubmit)}>
           <FormGroup>
-            <TextField
-              label="Email"
-              margin="normal"
-              error={!!errors.email}
-              helperText={errors.email && errors.email.message}
-              {...register("email", {
-                pattern: {
-                  value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,10}$/,
-                  message: "Incorrect email",
-                },
-              })}
+            {/*<TextField*/}
+            {/*  label="Email"*/}
+            {/*  margin="normal"*/}
+            {/*  error={!!errors.email}*/}
+            {/*  helperText={errors.email && errors.email.message}*/}
+            {/*  {...register("email")}*/}
+            {/*/>*/}
+
+            <Controller
+              name="email"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Email"
+                  margin="normal"
+                  error={!!errors.email}
+                  helperText={errors.email && errors.email.message}
+                />
+              )}
             />
-            <TextField
-              type="password"
-              label="Password"
-              margin="normal"
-              error={!!errors.password}
-              helperText={errors.password && errors.password.message}
-              {...register("password", {
-                required: {
-                  value: true,
-                  message: "Password is required",
-                },
-              })}
+
+            <Controller
+              name="password"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  type="password"
+                  label="Password"
+                  margin="normal"
+                  error={!!errors.password}
+                  helperText={errors.password && errors.password.message}
+                />
+              )}
             />
 
             {/*<span>{errors.password && errors.password.message}</span>*/}
